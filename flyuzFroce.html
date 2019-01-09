@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+ <head>
+  <meta charset="utf-8" />
+ </head>
+ <body style="height: 100%; margin: 0;background: #F8F8FF;">
+  <div id="container" style="height: 100%"></div>
+  <script src="js/echarts.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    app.title = '力引导布局';
+    myChart.showLoading();
+
+    var nodes = [];
+    var numNodes = 200;
+    var categories = [];
+    for (var i = 0; i < 3; i++) {
+      categories[i] = {
+        name: '类型' + i
+      };
+    }
+
+    //生成点
+    for (var x = 0; x < numNodes; x++) {
+      var targetAry = [];
+      var connections = (Math.round(Math.random() * 5));
+      for (var y = 0; y < connections; y++) {
+        targetAry.push(Math.round(Math.random() * numNodes))
+      }
+      if (x < numNodes / 2) {
+        nodes.push({
+          id: x,
+          name: "Node " + x,
+          target: targetAry,
+          category: 0,
+          value: 15
+        })
+      } else {
+        nodes.push({
+          id: x,
+          name: "Node " + x,
+          target: targetAry,
+          category: 1,
+          value: 15
+        })
+      }
+    }
+    //生成边
+    var links = [];
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].target !== undefined) {
+        for (var j = 0; j < nodes[i].target.length; j++) {
+          links.push({
+            source: nodes[i].id,
+            target: nodes[i].target[j],
+          });
+        }
+      }
+    }
+
+
+        option = {
+        title: {
+          text: 'Minimun Dominating Set',
+          top: 'top',
+          left: 'left'
+        },
+        tooltip: {},
+        animation: true,
+        series: [{
+          type: 'graph', //string 默认必写
+          id: "", // string 组件 ID。默认不指定。指定则可用于在 option 或者 API 中引用组件。
+          name: 'flyuz', //string系列名称，用于tooltip的显示，legend 的图例筛选，在 setOption 更新数据和配置项时用于指定对应的系列。
+          legendHoverLink: true, //boolean是否启用图例 hover 时的联动高亮。
+          layout: 'force', // string none不采用任何布局，使用节点中提供的 x， y 作为节点的位置。
+          circular: { // Object 环形布局相关配置
+            rotateLabel: false //boolean是否旋转标签，默认不旋转
+          },
+          force: {
+            repulsion: 100,
+            gravity: 0.1, // number [ default: 0.1 ] 节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
+            edgeLength: 30,
+            layoutAnimation: true
+          },
+          roam: true,
+          draggable: true, //boolean [ default: false ] 节点是否可拖拽，只在使用力引导布局的时候有用。
+          //这个重要
+          focusNodeAdjacency: true, // 重要！！！  boolean  [ default: false ] 是否在鼠标移到节点上的时候突出显示节点以及节点的边和邻接节点。
+          symbol: "circle", //关系图节点标记的图形。
+          symbolSize: 10,
+          symbolRotate: undefined, //number 关系图节点标记的旋转角度。注意在 markLine 中当 symbol 为 'arrow' 时会忽略 symbolRotate 强制设置为切线的角度。
+          symbolOffset: [0, 0],
+          edgeSymbol: ['none', 'none'],
+          cursor: "none", // string [ default: 'pointer' ] 鼠标悬浮时在图形元素上时鼠标的样式是什么。同 CSS 的 cursor。
+        categories : [ {name : '支配集'}, {name : '非支配集'} ],
+        data: nodes,
+        links: links,
+        label: {
+            normal: {
+                position: 'right'
+            }
+        }
+        }
+        ]};
+        if (option && typeof option === "object") {
+          myChart.setOption(option, true);
+          myChart.hideLoading();
+        }
+        myChart.on('click', function(params) {
+          console.log(params);
+          console.log("click");
+        });
+      </script>
+ </body>
+</html>
