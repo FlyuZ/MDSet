@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="MDSet:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MDSet_jar</output-path>
+    <root id="root">
+      <element id="archive" name="MDSet.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="MDSet" />
+      </element>
+    </root>
+  </artifact>
+</component>

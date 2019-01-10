@@ -54,20 +54,31 @@ public class MDSet {
 	public void writeJson() {
 		try {
 			PrintWriter out = new PrintWriter("Graph.json", "utf-8");
-			out.println("{nodes:[");
+			out.print("nodes = \'[");
 			for (int i = 0; i < size; i++) {
-				out.println("{id:" + i + ", ");
-				out.println("name:Node " + i + ",");
+				out.print("{ \"id\" : " + i + ",");
+				out.print("  \"name\" : \"Node " + i + "\",");
 				if (MDSet[i] == 0)
-					out.println("category:" + "0},");
+					out.print("  \"category\" : " + "0}");
 				else
-					out.println("category:" + "1},");
+					out.print("  \"category\" : " + "1}");
+				if(i != size -1)
+					out.print(",");
 			}
-			out.println("]}");
-			out.println("{links:[");
-			for() {
-				
+			out.println("]\';");
+			out.print("links = \'[");
+			int[][] g = graph.getGraph();
+			for(int i=0; i<size; i++) {
+				for(int j=i; j<size; j++) {
+					if(g[i][j] == 1) {
+						out.print("{ \"source\" : " + i + ",");
+						out.print("   \"target\" : " + j + "}");
+						if(i!=size-1 ||j!=size-1)
+							out.print(",");
+					}
+				}
 			}
+			out.println("]\';");
 			out.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -110,6 +121,7 @@ public class MDSet {
 				DetValue[degree0] = 1;
 				neighbor.getNeighborPQ()[i].Assignment = 1;
 			} else if (neighbor.getNeighborPQ()[i].neighbor.size() == 1) {
+				//因为有前后顺序 所以可以保证  最后的结果是正确的
 				int degree0 = neighbor.getNeighborPQ()[i].getNodeNum();
 				int degree1 = neighbor.getNeighborPQ()[i].neighbor.get(0);
 				DetValue[degree0] = 1;
@@ -118,8 +130,8 @@ public class MDSet {
 				neighbor.getNeighborPQ()[degree1].Assignment = 1;
 			}
 		}
-		// for(Node n : neighbor.getNeighborPQ())
-		// System.out.println(n);
+		 for(Node n : neighbor.getNeighborPQ())
+		 System.out.println(n);
 	}
 
 	private void DFS(int begin) {
